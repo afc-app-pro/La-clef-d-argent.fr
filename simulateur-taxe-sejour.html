@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur de taxe de séjour par commune | La Clef d’Argent</title>
+<meta name="description" content="Estimez la taxe de séjour à collecter selon la commune de votre bien en location courte durée (Val-de-Marne, Paris). Simulateur indicatif, à confirmer avec le simulateur officiel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" width="22" height="22"><circle cx="14" cy="14" r="8" fill="none" stroke="#A98753" stroke-width="3"/><circle cx="14" cy="14" r="3" fill="#A98753"/><rect x="20" y="12" width="17" height="4" fill="#A98753"/><rect x="30" y="16" width="4" height="6" fill="#A98753"/><rect x="24" y="16" width="4" height="8" fill="#A98753"/></svg></span>La Clef d’Argent</a>
+    <nav class="navlinks">
+      <a href="services.html">Services</a>
+      <a href="cas-concrets.html">Cas concrets</a>
+      <a href="zone-desservie.html">Zone desservie</a>
+      <a href="ressources.html">Ressources</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <a href="index.html#contact" class="btn btn-primary nav-cta">Estimer mon bien</a>
+  </div>
+</header>
+
+<div class="wrap breadcrumb"><a href="index.html">Accueil</a> · Simulateur taxe de séjour</div>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="kicker">Outil gratuit</p>
+    <h1>Combien de taxe de séjour collecter selon votre commune ?</h1>
+    <p class="lead">Pour la majorité des locations meublées non classées (le cas de la plupart des Airbnb), la taxe de séjour est un pourcentage du prix de la nuitée, plafonné, puis majoré de taxes additionnelles régionales et départementales. Ce simulateur applique la méthode officielle — à confirmer avant collecte, voir la note en bas de page.</p>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="wrap sim-grid">
+
+    <div class="sim-card">
+      <h3>Votre situation</h3>
+
+      <div class="sim-field">
+        <label for="commune">Commune du bien</label>
+        <select id="commune"></select>
+        <p class="sim-note" id="communeNote"></p>
+      </div>
+
+      <div class="sim-field-row">
+        <div class="sim-field">
+          <label for="prix">Prix total du séjour (hors taxe de séjour, €)</label>
+          <input type="number" id="prix" min="0" step="1" value="240">
+        </div>
+        <div class="sim-field">
+          <label for="nuits">Nombre de nuits</label>
+          <input type="number" id="nuits" min="1" step="1" value="2">
+        </div>
+      </div>
+
+      <div class="sim-field-row">
+        <div class="sim-field">
+          <label for="adultes">Voyageurs majeurs (assujettis)</label>
+          <input type="number" id="adultes" min="1" step="1" value="2">
+        </div>
+        <div class="sim-field">
+          <label for="mineurs">Voyageurs mineurs (exonérés)</label>
+          <input type="number" id="mineurs" min="0" step="1" value="0">
+        </div>
+      </div>
+
+      <hr style="border:none; border-top:1px solid var(--line); margin:20px 0;">
+
+      <p class="sim-note" style="margin-bottom:14px;">Paramètres du tarif communal — pré-remplis, à ajuster si votre commune a délibéré autrement.</p>
+
+      <div class="sim-field-row">
+        <div class="sim-field">
+          <label for="taux">Taux non classé (%)</label>
+          <input type="number" id="taux" min="1" max="5" step="0.1" value="5">
+        </div>
+        <div class="sim-field">
+          <label for="plafond">Plafond avant majorations (€)</label>
+          <input type="number" id="plafond" min="0" step="0.1" value="4.00">
+        </div>
+      </div>
+
+      <label class="sim-check"><input type="checkbox" id="taxeDept" checked> Additionnelle départementale (+10 %)</label>
+      <p class="sim-note" style="margin-top:-10px; margin-bottom:14px;">Val-de-Marne : oui. Paris : à vérifier, décochez si besoin.</p>
+    </div>
+
+    <div class="sim-result">
+      <h3>Estimation</h3>
+      <div class="sim-line"><span>Coût HT par personne et par nuit</span><strong id="outCout">—</strong></div>
+      <div class="sim-line"><span>Tarif variable (avant majorations)</span><strong id="outTarifBase">—</strong></div>
+      <div class="sim-line"><span>Majorations appliquées</span><strong id="outMajoration">—</strong></div>
+      <div class="sim-line"><span>Tarif final / personne / nuit</span><strong id="outTarifFinal">—</strong></div>
+      <div class="sim-total"><span>À collecter au total</span><span id="outTotal">—</span></div>
+      <p class="sim-note" style="color:#9BA2AE; margin-top:14px;">Mineurs exonérés, non comptés dans le nombre de personnes assujetties.</p>
+    </div>
+
+  </div>
+
+  <div class="wrap">
+    <div class="sim-disclaimer">
+      <strong>À vérifier avant application.</strong> Ce simulateur applique la méthode légale (art. L.2333-30 du CGCT) avec les valeurs connues pour Saint-Maur-des-Fossés (tarifs applicables au 01/01/2026, vérifiés le 12/03/2026 sur le portail officiel de la ville). Pour les autres communes, les valeurs de taux et de plafond affichées sont des valeurs par défaut à confirmer — chaque commune délibère les siennes. Avant toute collecte auprès de vos voyageurs, vérifiez le tarif exact sur <a href="https://taxesejour.impots.gouv.fr" target="_blank" rel="noopener" style="color:var(--navy);">taxesejour.impots.gouv.fr</a> (simulateur officiel par commune) ou sur le portail de télédéclaration de la commune concernée (par exemple <a href="https://saintmaur.taxesejour.fr" target="_blank" rel="noopener" style="color:var(--navy);">saintmaur.taxesejour.fr</a> pour Saint-Maur-des-Fossés). Ceci n'est pas un conseil fiscal individualisé.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="guide">
+  <div class="wrap" style="text-align:center;">
+    <p class="kicker">On s'en occupe pour vous</p>
+    <h2 style="font-size:28px; margin-bottom:16px;">La collecte et la déclaration, gérées de bout en bout</h2>
+    <p class="lead" style="margin:0 auto 28px; text-align:center;">Avec La Clef d’Argent, la taxe de séjour est collectée, déclarée et reversée sans que vous ayez à y penser chaque mois.</p>
+    <a href="index.html#contact" class="btn btn-primary">Demander mon estimation gratuite</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">La Clef d’Argent</div>
+      <div class="footer-cols">
+        <div>
+          <a href="services.html">Services</a>
+          <a href="cas-concrets.html">Cas concrets</a>
+          <a href="zone-desservie.html">Zone desservie</a>
+          <a href="ressources.html">Ressources</a>
+        </div>
+        <div>
+          <a href="index.html#contact">Contact</a>
+          <a href="mailto:contact@laclefdargent.fr">contact@laclefdargent.fr</a>
+        </div>
+      </div>
+    </div>
+    <p class="fine">La Clef d’Argent — membre du réseau Invest Malin. Domaine et coordonnées à activer avant mise en ligne. Mentions légales et politique de confidentialité à ajouter.</p>
+  </div>
+</footer>
+
+<script>
+  var communes = [
+    { name: "Saint-Maur-des-Fossés / La Varenne", taux: 5, plafond: 4.00, dept: true, verified: true,
+      note: "Vérifié le 12/03/2026 sur saintmaur.taxesejour.fr — tarifs applicables au 01/01/2026." },
+    { name: "Nogent-sur-Marne", taux: 5, plafond: 4.00, dept: true, verified: false,
+      note: "Valeur par défaut (non vérifiée pour cette commune) — confirmez sur taxesejour.impots.gouv.fr." },
+    { name: "Le Perreux-sur-Marne", taux: 5, plafond: 4.00, dept: true, verified: false,
+      note: "Valeur par défaut (non vérifiée pour cette commune) — confirmez sur taxesejour.impots.gouv.fr." },
+    { name: "Joinville-le-Pont", taux: 5, plafond: 4.00, dept: true, verified: false,
+      note: "Valeur par défaut (non vérifiée pour cette commune) — confirmez sur taxesejour.impots.gouv.fr." },
+    { name: "Vincennes", taux: 5, plafond: 4.00, dept: true, verified: false,
+      note: "Valeur par défaut (non vérifiée pour cette commune) — confirmez sur taxesejour.impots.gouv.fr." },
+    { name: "Champigny-sur-Marne", taux: 5, plafond: 4.00, dept: true, verified: false,
+      note: "Valeur par défaut (non vérifiée pour cette commune) — confirmez sur taxesejour.impots.gouv.fr." },
+    { name: "Saint-Maurice", taux: 5, plafond: 4.00, dept: true, verified: false,
+      note: "Valeur par défaut (non vérifiée pour cette commune) — confirmez sur taxesejour.impots.gouv.fr." },
+    { name: "Paris (12e, 20e, autres)", taux: 5, plafond: 4.00, dept: false, verified: false,
+      note: "Paris est à la fois commune et département : l'additionnelle départementale de 10 % ne s'applique pas nécessairement de la même façon — décochée par défaut, à confirmer." },
+    { name: "Autre commune", taux: 5, plafond: 4.00, dept: false, verified: false,
+      note: "Renseignez le taux et le plafond exacts de votre commune avant de vous fier au résultat." }
+  ];
+
+  var selEl = document.getElementById('commune');
+  communes.forEach(function(c, i){
+    var opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = c.name;
+    selEl.appendChild(opt);
+  });
+
+  var tauxEl = document.getElementById('taux');
+  var plafondEl = document.getElementById('plafond');
+  var deptEl = document.getElementById('taxeDept');
+  var noteEl = document.getElementById('communeNote');
+
+  function applyCommune(){
+    var c = communes[selEl.value];
+    tauxEl.value = c.taux;
+    plafondEl.value = c.plafond.toFixed(2);
+    deptEl.checked = c.dept;
+    var flag = c.verified
+      ? '<span class="sim-flag sim-flag-verified">Vérifié</span>'
+      : '<span class="sim-flag sim-flag-check">À vérifier</span>';
+    noteEl.innerHTML = flag + ' ' + c.note;
+    compute();
+  }
+
+  function fmt(n){ return n.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €'; }
+
+  function compute(){
+    var prix = parseFloat(document.getElementById('prix').value) || 0;
+    var nuits = parseInt(document.getElementById('nuits').value) || 1;
+    var adultes = parseInt(document.getElementById('adultes').value) || 0;
+    var mineurs = parseInt(document.getElementById('mineurs').value) || 0;
+    var taux = (parseFloat(tauxEl.value) || 0) / 100;
+    var plafond = parseFloat(plafondEl.value) || 0;
+    var dept = deptEl.checked;
+
+    var occupants = adultes + mineurs;
+    if (occupants < 1) occupants = 1;
+
+    var coutParPersonne = (prix / nuits) / occupants;
+    var tarifBase = Math.min(coutParPersonne * taux, plafond);
+
+    var majoration = 1 + (dept ? 0.10 : 0) + 0.15 + 2.00; // départ + SGP 15% + IDF Mobilités 200%
+    var tarifFinal = tarifBase * majoration;
+    var total = tarifFinal * adultes * nuits;
+
+    document.getElementById('outCout').textContent = fmt(coutParPersonne);
+    document.getElementById('outTarifBase').textContent = fmt(tarifBase);
+    var majorationsTxt = [];
+    if (dept) majorationsTxt.push('+10 % Val-de-Marne');
+    majorationsTxt.push('+15 % Grand Paris');
+    majorationsTxt.push('+200 % IDF Mobilités');
+    document.getElementById('outMajoration').textContent = majorationsTxt.join(' · ');
+    document.getElementById('outTarifFinal').textContent = fmt(tarifFinal);
+    document.getElementById('outTotal').textContent = fmt(total);
+  }
+
+  selEl.addEventListener('change', applyCommune);
+  ['prix','nuits','adultes','mineurs','taux','plafond'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', compute);
+  });
+  deptEl.addEventListener('change', compute);
+
+  applyCommune();
+</script>
+
+</body>
+</html>
